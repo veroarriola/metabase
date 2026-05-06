@@ -4,25 +4,27 @@ def subclassed_model():
     """
     Decorator maker function.
     Adds property to recover subclass model instance.
+    If it received parameters, the decorator can make use of them
+    because they are kept in the closure.
     :return: class with subclass property
     """
     def decorator(cls):
         print("decorator received", cls)
 
         def subclass_instance(self):
-            self_class_name = type(self).__name__
             if hasattr(self, '_subclass_instance'):
                 #print("_subclass_instance already configured:", self._subclass_instance)
                 return self._subclass_instance
             else:
-                last_n = None
+                self_class_name = self.__class__.__name__
                 for n in dir(self):
                     if n in ['subclass_instance', 'virtual_instance']:
                         continue
                     val = getattr(self, n, None)
-                    class_name = type(val).__name__
-                    if isinstance(val, cls):
-                        #print('  ¿Descendiente?')
+                    class_name = val.__class__.__name__
+                    if self_class_name != class_name \
+                        and isinstance(val, self.__class__):
+                        #print('  ¿Descendiente?', isinstance(val, self.__class__))
                         #print('    ', n)
                         #print('    Clase:   ', type(self), self_class_name)
                         #print('    Atributo:', type(val), class_name)
@@ -38,9 +40,10 @@ def subclassed_model():
         def virtual_instance(self):
             #print("---")
             #print("[virtual_instance] ", type(self))
-            if self.__class__.__subclasses__():
+            if self.__class__.__subclasses__() and self.subclass_instance:
+                #print("  name:", self.__class__.__name__)
                 #print("  sub: ", self.__class__.__subclasses__())
-                #print("  virtual: ", self.subclass_instance.virtual_instance)
+                #print("  virtual: ", self.subclass_instance)
                 return self.subclass_instance.virtual_instance
             else:
                 #print("  no tiene sub")
@@ -65,7 +68,7 @@ class MadreAbstracta(Abuela):
     def nombre(self):
         return "MA"
 
-@subclassed_model()
+
 class Hija(MadreAbstracta):
     pass
 

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from testmeta.models import Abuela, MadreAbstracta, Hija, Nieta, Nieto
-
+from termcolor import colored
 
 class NietaTestCase(TestCase):
     def setUp(self):
@@ -82,7 +82,7 @@ class SubclassTestCase(TestCase):
 
     def test_subclassed_model(self):
         print()
-        print("""^_^ test_subclassed_model ^_^""")
+        print(colored("""^_^ test_subclassed_model ^_^""", 'cyan'))
         def print_info(instances, class_name):
             print(':) ', class_name)
             for i, instance in enumerate(instances):
@@ -103,9 +103,17 @@ class SubclassTestCase(TestCase):
 
     def test_virtual_instance(self):
         print()
-        print("""^_^ test_virtual_instance ^_^""")
+        print(colored("""^_^ test_virtual_instance ^_^""", 'cyan'))
         for i, instance in enumerate(Abuela.objects.all()):
-            if hasattr(instance, 'virtual_instance'):
-                print(i, instance, instance.virtual_instance)
+            print(i, instance)
+            if hasattr(instance, 'subclass_instance'):
+                print('  inmediate subclass:', instance.subclass_instance)
             else:
-                print(i, instance)
+                print('  inmediate subclass not found')
+            if hasattr(instance, 'virtual_instance'):
+                vins = instance.virtual_instance
+                print('  it is:  ', vins, ',', vins.texto)
+                print('  of type:', vins.__class__.__name__)
+            else:
+                print('  virtual_instance not found')
+                
