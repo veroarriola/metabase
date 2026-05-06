@@ -82,7 +82,7 @@ class SubclassTestCase(TestCase):
 
     def test_subclassed_model(self):
         print()
-        print(colored("""^_^ test_subclassed_model ^_^""", 'cyan'))
+        print(colored("""^_^ test_subclassed_model ^_^""", 'blue'))
         def print_info(instances, class_name):
             print(':) ', class_name)
             for i, instance in enumerate(instances):
@@ -103,7 +103,7 @@ class SubclassTestCase(TestCase):
 
     def test_virtual_instance(self):
         print()
-        print(colored("""^_^ test_virtual_instance ^_^""", 'cyan'))
+        print(colored("""^_^ test_virtual_instance ^_^""", 'blue'))
         for i, instance in enumerate(Abuela.objects.all()):
             print(i, instance)
             if hasattr(instance, 'subclass_instance'):
@@ -116,4 +116,16 @@ class SubclassTestCase(TestCase):
                 print('  of type:', vins.__class__.__name__)
             else:
                 print('  virtual_instance not found')
+
+    def test_first_ancestors(self):
+        print()
+        print(colored("""^_^ test_first_ancestors ^_^""", 'blue'))
+        instances = [self.abuela, self.hija, self.nieta, self.nieto]
+        for i, instance in enumerate(instances):
+            print(i, instance)
+            if hasattr(instance, 'first_ancestor'):
+                fa = instance.first_ancestor
+                print('  descendant of:', fa, ',', fa.texto)
+            else:
+                print('  first_ancestor not found')
                 
