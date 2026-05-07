@@ -1,0 +1,2 @@
+Un experimento interesante para el manejo de herencia en modelos de Django.
+Desafortunadamente ```virtual_instance``` y ```first_ancestor``` no funcionan en ambientes donde haya mucho uso de introspección, porque ```hasattr``` y ```getattr``` caen fácilmente en recursiones infinitas.
